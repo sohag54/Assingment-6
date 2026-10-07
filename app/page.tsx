@@ -1,6 +1,7 @@
 import Image from "next/image";
 import banner from "../assets/banner.png";
 import Navbar from "./components/Navbar";
+import WorkoutLibrary from "./components/WorkoutLibrary";
 
 export default function Home() {
   return (
@@ -68,6 +69,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+         {/* Workout Library */}
+    <WorkoutLibrary />
       </main>
     </>
   );
