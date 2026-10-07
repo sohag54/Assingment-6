@@ -1,190 +1,277 @@
 import Link from "next/link";
-import Image from "next/image";
+import Navbar from "../../components/Navbar";
 import { Workout } from "../../types";
 
-interface PageProps {
+type PageProps = {
   params: Promise<{
     id: string;
   }>;
-}
+};
 
-export default async function WorkoutDetails({ params }: PageProps) {
+export default async function DetailsPage({ params }: PageProps) {
   const { id } = await params;
 
   let workout: Workout | null = null;
 
   try {
     const response = await fetch(
-      "https://api.abcz.workers.dev/api/fitlog",
+      `https://api.abcz.workers.dev/api/fitlog/${id}`,
       {
         cache: "no-store",
       }
     );
 
-    const workouts: Workout[] = await response.json();
+    if (!response.ok) {
+      throw new Error("Workout not found");
+    }
 
-    workout = workouts.find((item) => item.id === Number(id)) || null;
-  } catch (error) {
+    workout = await response.json();
+  } catch {
     workout = null;
   }
 
   if (!workout) {
     return (
-      <main className="min-h-screen bg-[#0b0d0f] px-[20px] py-[80px] text-center text-white">
-        <h1 className="text-[28px] font-black">Workout Not Found</h1>
+      <>
+        <Navbar />
 
-        <Link
-          href="/"
-          className="mt-[20px] inline-block bg-[#ccff00] px-[20px] py-[10px] text-[10px] font-black text-black"
-        >
-          BACK TO WORKOUTS
-        </Link>
-      </main>
+        <main className="flex min-h-[calc(100vh-62px)] items-center justify-center bg-[#0b0d0f] px-5 text-white">
+          <div className="text-center">
+            <h1 className="text-[32px] font-black">WORKOUT NOT FOUND</h1>
+
+            <p className="mt-3 text-[12px] text-[#8b929b]">
+              The workout you are looking for does not exist.
+            </p>
+
+            <Link
+              href="/"
+              className="mt-6 inline-flex h-[32px] items-center justify-center bg-[#ccff00] px-5 text-[10px] font-black text-black"
+            >
+              BACK TO LIBRARY
+            </Link>
+          </div>
+        </main>
+      </>
     );
   }
 
   return (
     <main className="min-h-screen bg-[#0b0d0f] text-white">
-      <div className="mx-auto max-w-[960px] px-[20px] py-[40px]">
+      <Navbar />
 
-        {/* Back */}
-        <Link
-          href="/"
-          className="mb-[25px] inline-block text-[10px] font-bold text-[#9ca3af] hover:text-[#ccff00]"
-        >
-          ← BACK TO WORKOUTS
-        </Link>
-
-        <div className="overflow-hidden rounded-[10px] border border-[#252a2e] bg-[#111417]">
-
-          {/* Image */}
-          <div className="h-[320px] w-full bg-[#181b1f]">
-            <Image
+      {/* Details Section */}
+      <section className="mx-auto max-w-[960px] px-0 pb-[45px] pt-[31px]">
+        <div className="grid grid-cols-1 gap-[36px] lg:grid-cols-[377px_1fr]">
+          
+          {/* Left Image */}
+          <div className="overflow-hidden rounded-[10px]">
+            <img
               src={workout.image}
               alt={workout.name}
-              width={960}
-              height={320}
-              className="h-full w-full object-cover"
+              className="h-[471px] w-full object-cover"
             />
           </div>
 
-          {/* Content */}
-          <div className="p-[30px]">
-
-            <div className="flex items-center justify-between">
-              <span className="text-[9px] font-bold uppercase text-[#ccff00]">
-                {workout.difficulty}
-              </span>
-
-              <span className="text-[11px] text-[#9ca3af]">
-                ★ {workout.rating}
-              </span>
-            </div>
-
-            <h1 className="mt-[10px] text-[36px] font-black uppercase">
-              {workout.name}
+          {/* Right Content */}
+          <div className="pt-[1px]">
+            
+            {/* Title */}
+            <h1
+              className="text-white"
+              style={{
+                fontFamily:
+                  '"Arial Narrow", "Roboto Condensed", Impact, sans-serif',
+                fontSize: "26px",
+                fontWeight: 900,
+                lineHeight: "1",
+              }}
+            >
+              {workout.name.toUpperCase()}
             </h1>
 
-            <p className="mt-[12px] max-w-[700px] text-[12px] leading-[20px] text-[#9ca3af]">
+            {/* Description */}
+            <p className="mt-[10px] max-w-[375px] text-[11px] leading-[16px] text-[#8b929b]">
               {workout.description}
             </p>
 
-            {/* Stats */}
-            <div className="mt-[25px] grid grid-cols-2 gap-[10px] sm:grid-cols-4">
-
-              <div className="border border-[#252a2e] p-[15px]">
-                <p className="text-[9px] text-[#737980]">DURATION</p>
-                <p className="mt-[5px] text-[16px] font-bold">
-                  {workout.duration} min
-                </p>
-              </div>
-
-              <div className="border border-[#252a2e] p-[15px]">
-                <p className="text-[9px] text-[#737980]">CALORIES</p>
-                <p className="mt-[5px] text-[16px] font-bold">
-                  {workout.caloriesBurned}
-                </p>
-              </div>
-
-              <div className="border border-[#252a2e] p-[15px]">
-                <p className="text-[9px] text-[#737980]">SETS</p>
-                <p className="mt-[5px] text-[16px] font-bold">
-                  {workout.sets}
-                </p>
-              </div>
-
-              <div className="border border-[#252a2e] p-[15px]">
-                <p className="text-[9px] text-[#737980]">REPS</p>
-                <p className="mt-[5px] text-[16px] font-bold">
-                  {workout.reps}
-                </p>
-              </div>
-
-            </div>
-
             {/* Muscle Groups */}
-            <div className="mt-[30px]">
-              <h2 className="text-[14px] font-bold uppercase">
-                Muscle Groups
-              </h2>
-
-              <div className="mt-[10px] flex flex-wrap gap-[8px]">
-                {workout.muscleGroups.map((muscle) => (
-                  <span
-                    key={muscle}
-                    className="border border-[#353a40] px-[10px] py-[5px] text-[9px] text-[#9ca3af]"
-                  >
-                    {muscle}
-                  </span>
-                ))}
-              </div>
+            <div className="mt-[12px] flex flex-wrap gap-[7px]">
+              {workout.muscleGroups.slice(0, 2).map((muscle) => (
+                <span
+                  key={muscle}
+                  className="rounded-full bg-[#ccff00] px-[10px] py-[4px] text-[8px] font-black uppercase leading-none text-black"
+                >
+                  {muscle}
+                </span>
+              ))}
             </div>
 
-            {/* Equipment */}
-            <div className="mt-[25px]">
-              <h2 className="text-[14px] font-bold uppercase">
-                Equipment
-              </h2>
+            {/* Specs */}
+            <div className="mt-[19px] overflow-hidden rounded-[10px] border border-[#252a31] bg-[#15191f]">
+              
+              {/* Equipment */}
+              <div className="flex h-[31px] items-center justify-between border-b border-[#242930] px-[15px]">
+                <span className="text-[8px] font-bold uppercase tracking-[0.05em] text-[#8b929b]">
+                  EQUIPMENT
+                </span>
 
-              <div className="mt-[10px] flex flex-wrap gap-[8px]">
-                <div className="mt-[10px] text-[10px] text-[#9ca3af]">
-  {workout.equipment}
-</div>
-                  <span
-                    key={item}
-                    className="border border-[#353a40] px-[10px] py-[5px] text-[9px] text-[#9ca3af]"
-                  >
-                    {item}
-                  </span>
-                ))}
+                <span className="text-[9px] text-[#d6d9dd]">
+                  {workout.equipment}
+                </span>
+              </div>
+
+              {/* Difficulty */}
+              <div className="flex h-[31px] items-center justify-between border-b border-[#242930] px-[15px]">
+                <span className="text-[8px] font-bold uppercase tracking-[0.05em] text-[#8b929b]">
+                  DIFFICULTY
+                </span>
+
+                <span className="text-[9px] text-[#d6d9dd]">
+                  {workout.difficulty}
+                </span>
+              </div>
+
+              {/* Sets */}
+              <div className="flex h-[31px] items-center justify-between border-b border-[#242930] px-[15px]">
+                <span className="text-[8px] font-bold uppercase tracking-[0.05em] text-[#8b929b]">
+                  SETS
+                </span>
+
+                <span className="text-[9px] text-[#d6d9dd]">
+                  {workout.sets}
+                </span>
+              </div>
+
+              {/* Reps */}
+              <div className="flex h-[31px] items-center justify-between border-b border-[#242930] px-[15px]">
+                <span className="text-[8px] font-bold uppercase tracking-[0.05em] text-[#8b929b]">
+                  REPS
+                </span>
+
+                <span className="text-[9px] text-[#d6d9dd]">
+                  {workout.reps}
+                </span>
+              </div>
+
+              {/* Duration */}
+              <div className="flex h-[31px] items-center justify-between border-b border-[#242930] px-[15px]">
+                <span className="text-[8px] font-bold uppercase tracking-[0.05em] text-[#8b929b]">
+                  DURATION
+                </span>
+
+                <span className="text-[9px] text-[#d6d9dd]">
+                  {workout.duration} min
+                </span>
+              </div>
+
+              {/* Calories */}
+              <div className="flex h-[31px] items-center justify-between border-b border-[#242930] px-[15px]">
+                <span className="text-[8px] font-bold uppercase tracking-[0.05em] text-[#8b929b]">
+                  CALORIES
+                </span>
+
+                <span className="text-[9px] text-[#d6d9dd]">
+                  {workout.caloriesBurned} kcal
+                </span>
+              </div>
+
+              {/* Rating */}
+              <div className="flex h-[31px] items-center justify-between px-[15px]">
+                <span className="text-[8px] font-bold uppercase tracking-[0.05em] text-[#8b929b]">
+                  RATING
+                </span>
+
+                <span className="text-[9px] text-[#d6d9dd]">
+                  {workout.rating}
+                </span>
               </div>
             </div>
 
             {/* Instructions */}
-            <div className="mt-[30px]">
-              <h2 className="text-[14px] font-bold uppercase">
-                Instructions
+            <div className="mt-[22px]">
+              <h2 className="text-[11px] font-black uppercase text-white">
+                INSTRUCTIONS
               </h2>
 
-              <div className="mt-[12px] space-y-[10px]">
-                {workout.instructions.map((instruction, index) => (
-                  <div
+              <ol className="mt-[9px] space-y-[7px]">
+                {workout.instructions.slice(0, 4).map((instruction, index) => (
+                  <li
                     key={index}
-                    className="flex gap-[12px] text-[11px] leading-[18px] text-[#9ca3af]"
+                    className="flex gap-[10px] text-[9px] leading-[13px] text-[#9ca3ab]"
                   >
-                    <span className="font-bold text-[#ccff00]">
+                    <span className="w-[10px] shrink-0 text-[#737a83]">
                       {index + 1}.
                     </span>
 
                     <span>{instruction}</span>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ol>
             </div>
 
+            {/* Buttons */}
+            <div className="mt-[22px] flex flex-wrap gap-[10px]">
+              
+              {/* Add Button */}
+              <button
+                type="button"
+                className="flex h-[29px] items-center gap-[7px] rounded-[5px] bg-[#ccff00] px-[14px] text-[9px] font-black text-black transition hover:bg-white"
+              >
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <rect x="5" y="4" width="14" height="17" rx="2" />
+                  <path d="M9 2v4M15 2v4M8 10h8M8 14h5" />
+                </svg>
+
+                Add to today&apos;s plan
+              </button>
+
+              {/* Save Button */}
+              <button
+                type="button"
+                className="flex h-[29px] items-center gap-[7px] rounded-[5px] border border-[#343941] px-[14px] text-[9px] font-medium text-[#d1d5db] transition hover:border-[#ccff00] hover:text-[#ccff00]"
+              >
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M6 4h12v17l-6-4-6 4V4z" />
+                </svg>
+
+                Save for later
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-[#202328]">
+        <div className="mx-auto flex h-[54px] max-w-[960px] items-center justify-between">
+          
+          <div className="flex items-center gap-[6px]">
+            <span className="text-[14px] text-[#ccff00]">⚒</span>
+
+            <span className="text-[8px] font-black tracking-[0.5px] text-white">
+              FITLOG
+            </span>
+          </div>
+
+          <p className="text-[8px] text-[#666d76]">
+            © 2026 FitLog — Workout Library. Train hard, log honest.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
