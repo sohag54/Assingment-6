@@ -69,12 +69,12 @@ export default function Navbar() {
             Workouts
           </a>
 
-          <a
-            href="/#plan"
-            className="px-[2px] text-[10px] font-medium text-[#9ca3af] transition hover:text-white"
-          >
-            My Plan
-          </a>
+         <a
+  href="/my-plan"
+  className="px-[2px] text-[10px] font-medium text-[#9ca3af] transition hover:text-white"
+>
+  My Plan
+</a>
         </div>
 
         {/* Right Side */}

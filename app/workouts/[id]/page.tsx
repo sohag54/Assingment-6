@@ -2,6 +2,7 @@ import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import WorkoutActions from "../../components/WorkoutActions";
 import { Workout } from "../../types";
+import Footer from "../../components/Footer";
 
 type PageProps = {
   params: Promise<{
@@ -217,22 +218,7 @@ export default async function DetailsPage({ params }: PageProps) {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#202328]">
-        <div className="mx-auto flex h-[54px] max-w-[960px] items-center justify-between">
-          
-          <div className="flex items-center gap-[6px]">
-            <span className="text-[14px] text-[#ccff00]">⚒</span>
-
-            <span className="text-[8px] font-black tracking-[0.5px] text-white">
-              FITLOG
-            </span>
-          </div>
-
-          <p className="text-[8px] text-[#666d76]">
-            © 2026 FitLog — Workout Library. Train hard, log honest.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }
