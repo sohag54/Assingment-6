@@ -124,7 +124,7 @@ export default function Navbar() {
             </a>
 
             <a
-              href="/#plan"
+              href="/my-plan"
               className="text-[11px] font-medium text-[#9ca3af]"
             >
               My Plan
