@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
+import WorkoutActions from "../../components/WorkoutActions";
 import { Workout } from "../../types";
 
 type PageProps = {
@@ -210,47 +211,7 @@ export default async function DetailsPage({ params }: PageProps) {
             </div>
 
             {/* Buttons */}
-            <div className="mt-[22px] flex flex-wrap gap-[10px]">
-              
-              {/* Add Button */}
-              <button
-                type="button"
-                className="flex h-[29px] items-center gap-[7px] rounded-[5px] bg-[#ccff00] px-[14px] text-[9px] font-black text-black transition hover:bg-white"
-              >
-                <svg
-                  width="11"
-                  height="11"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect x="5" y="4" width="14" height="17" rx="2" />
-                  <path d="M9 2v4M15 2v4M8 10h8M8 14h5" />
-                </svg>
-
-                Add to today&apos;s plan
-              </button>
-
-              {/* Save Button */}
-              <button
-                type="button"
-                className="flex h-[29px] items-center gap-[7px] rounded-[5px] border border-[#343941] px-[14px] text-[9px] font-medium text-[#d1d5db] transition hover:border-[#ccff00] hover:text-[#ccff00]"
-              >
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M6 4h12v17l-6-4-6 4V4z" />
-                </svg>
-
-                Save for later
-              </button>
-            </div>
+            <WorkoutActions workout={workout} />
           </div>
         </div>
       </section>
