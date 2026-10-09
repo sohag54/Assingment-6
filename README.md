@@ -6,7 +6,7 @@ FitLog is a dark-themed workout library and tracking application built to help u
 
 ## 🌐 Live Demo
 
-🔗 **Live Website:** [Add your Vercel deployment URL here]
+🔗 **Live Website:** https://assingment-6-nine.vercel.app/
 
 ## ✨ Features
 
